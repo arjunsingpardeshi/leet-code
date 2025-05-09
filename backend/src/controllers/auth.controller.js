@@ -2,11 +2,10 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import {db} from "../libs/db.js"
 import { UserRole } from "../generated/prisma/index.js";
+
 const register = async (req, res) => {
     const {email, password, name} = req.body;
-
     try {
-        
         const existingUser = await db.User.findUnique({
             where:{
                 email
@@ -90,7 +89,7 @@ const login = async (req, res) => {
             secure: process.env.NODE_ENV != "devlopment",
             maxAge: 1000*60*60*24*7                         //7days
         });
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: "Logged in successfully",
             id: user.id,
