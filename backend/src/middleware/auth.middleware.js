@@ -2,19 +2,15 @@ import {db} from "../libs/db.js"
 
 import jwt from "jsonwebtoken"
 
-
-
 const authMiddleware = async (req, res, next) => {
 
     try {
         const token = req.cookies.jwt;
-
         if(!token){
             return res.status(400).json({
                 message: "unauthorized - no token provided"
             })
         }
-
         let decoded;
         decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -30,13 +26,9 @@ const authMiddleware = async (req, res, next) => {
                 role : true
             }
         });
-
-        
         if(!user){
             return res.status(404).json({
-                
                 message : "user not found"
-
             })
         }
         req.user = user;
@@ -52,9 +44,7 @@ const authMiddleware = async (req, res, next) => {
 
 const checkAdmin = async(req, res, next) => {
     try {
-        const userId = req.user.id;
-
-        
+        const userId = req.user.id;    
         const user = await db.User.findUnique({
             where:{
                 id:userId

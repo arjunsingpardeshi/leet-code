@@ -1,3 +1,4 @@
+import { status } from "../generated/prisma/index.js";
 import { db } from "../libs/db.js";
 import { getLanguageName, pollBatchResults, submitBatch } from "../libs/judge0.lib.js";
 
@@ -63,10 +64,7 @@ const executeCode = async (req, res) => {
         });
         console.log("detail result = ",detailedResults);
     
-        //store submission summary
-
-        
-        
+        //store submission summary 
         const submission = await db.Submission.create({
             data: {
                 userId,
@@ -77,13 +75,11 @@ const executeCode = async (req, res) => {
                 stdout: JSON.stringify(detailedResults.map((r) => r.stdout)),
                 stderr: detailedResults.some((r) => r.stderr) ? JSON.stringify(detailedResults.map((r) => r.stderr)) : null,
                 compileOutput: detailedResults.some((r) => r.compile_output) ? JSON.stringify(detailedResults.map((r) => r.compile_output)) : null,
-                status: allPassed ? "ACCEPTED" : "WRONG_ANSWER",
+                status: allPassed ? status.ACCEPTED : status.WRONG_ANSWER,
                 memory: detailedResults.some((r) => r.memory) ? JSON.stringify(detailedResults.map((r) => r.memory)) : null,
                 time: detailedResults.some((r) => r.time) ? JSON.stringify(detailedResults.map((r) => r.time)) : null,
             }
         })
-
-        
 
         //if all passed = true mark problem as solved for current user
         if(allPassed){
@@ -116,8 +112,6 @@ const executeCode = async (req, res) => {
         await db.testCaseResult.createMany({
             data: testCaseResults
         })
-
-        
         
         const submissionWithTestCase = await db.submission.findUnique({
             where: {
