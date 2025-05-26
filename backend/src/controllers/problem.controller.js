@@ -74,7 +74,15 @@ if(req.user.role!== "ADMIN"){
 const getAllProblem = async (req, res) => {
     
     try {
-        const problems = await db.Problem.findMany()
+        const problems = await db.Problem.findMany({
+            include: {
+                solvedBy: {
+                    where: {
+                        userId: req.user.id
+                    }
+                }
+            }
+        })
         if(!problems){
             return res.status(404).json({
                 error: "no problem found"

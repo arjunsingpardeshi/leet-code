@@ -508,7 +508,7 @@ public class Main {
 const CreateProblemForm = () => {
 
     const [sampleType, setSampleType] = useState("DP");
-    const navigate = useNavigate();
+    const navigation = useNavigate();
     const {register, control, handleSubmit, reset, formState: {errors}} = useForm({
         resolver: zodResolver(problemSchema),
         defaultValues: {
@@ -560,6 +560,20 @@ const CreateProblemForm = () => {
   
   const onSubmit = async (value) => {
     console.log(value);
+
+    try {
+        setIsLoading(true)
+        const res = await axiosInstance.post("/problems/create-problem", value);
+        toast.success(res.data.message || "Problem created successfully");
+        navigation("/");
+    } catch (error) {
+        
+        console.error(error)
+        toast.error("Error creating problem")
+    }
+    finally{
+        setIsLoading(false)
+    }
   }
 
   const loadSampleData = () => {
