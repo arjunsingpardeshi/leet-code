@@ -3,9 +3,11 @@ import { useAuthStore } from '../store/useAuthStore'
 import { Link } from 'react-router-dom'
 
 
-import { Bookmark, PencilIcon, Trash, TrashIcon, Plus} from "lucide-react"
-
-
+import { Bookmark, PencilIcon, Trash, TrashIcon, Plus, Loader2} from "lucide-react"
+import { useAction } from '../store/useAction'
+import { usePlaylistStore } from '../store/usePlaylistStore'
+import CreatePlaylistModal from './CreatePlaylistModal'
+import AddToPlaylistModal from "./AddToPlaylist"
 const ProblemTable = ({problems}) => {
 
 
@@ -18,6 +20,13 @@ const ProblemTable = ({problems}) => {
     const [selectedTag, setSelectedTag] = useState("ALL")
     const [currentPage, setCurrentPage] = useState(1)
 
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+    const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] = useState(false)
+    const {createPlaylist} = usePlaylistStore();
+    
+    const {isDeletingProblem, onDeleteProblem} = useAction()
+    
+    const [selectedProblemId, setSelectedProblemId] = useState(null);
 
       // Extract all unique tags from problems
 
@@ -55,10 +64,19 @@ const ProblemTable = ({problems}) => {
 
 
 
-    const handleDelete = (id) => {}
+    const handleDelete = (id) => {
+      onDeleteProblem(id)
+    }
 
      
-    const handleAddToPlaylist = (id) => {}
+    const handleAddToPlaylist = (problemId) => {
+      setSelectedProblemId(problemId)
+      setIsAddToPlaylistModalOpen(true)
+    }
+
+    const handleCreatePlaylist = async (data) => {
+      await createPlaylist(data)
+    }
 
     const difficulties = ["EASY", "MEDIUM", "HARD"];
 
@@ -177,7 +195,11 @@ const ProblemTable = ({problems}) => {
                               onClick={() => handleDelete(problem.id)}
                               className="btn btn-sm btn-error"
                             >
-                              <TrashIcon className="w-4 h-4 text-white" />
+                              {
+                                  isDeletingProblem ? <Loader2 className='animate-spin h-4 w-4'/> : 
+                                  <TrashIcon className="w-4 h-4 text-white" />
+
+                              }
                             </button>
                             <button disabled className="btn btn-sm btn-warning">
                               <PencilIcon className="w-4 h-4 text-white" />
@@ -229,17 +251,17 @@ const ProblemTable = ({problems}) => {
       </div>
 
       {/* Modals */}
-      {/* <CreatePlaylistModal
+      <CreatePlaylistModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreatePlaylist}
-      /> */}
+      />
       
-      {/* <AddToPlaylistModal
+      <AddToPlaylistModal
         isOpen={isAddToPlaylistModalOpen}
         onClose={() => setIsAddToPlaylistModalOpen(false)}
         problemId={selectedProblemId}
-      /> */}
+      />
     </div>
   )
 }
