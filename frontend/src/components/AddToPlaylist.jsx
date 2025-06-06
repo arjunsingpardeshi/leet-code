@@ -9,7 +9,10 @@ import { usePlaylistStore } from '../store/usePlaylistStore'
 const AddToPlaylist = ({isOpen, onClose, problemId}) => {
 
     const { playlists, getAllPlaylists, addProblemToPlaylist, isLoading} = usePlaylistStore();
+    // const store = usePlaylistStore();
 
+    // console.log("inside Addtoplaylist store is  ", store);
+ 
     const [selectedPlaylist, setSelectedPlaylist] = useState("");
 
     useEffect(() => {
@@ -27,11 +30,11 @@ const AddToPlaylist = ({isOpen, onClose, problemId}) => {
 
     await addProblemToPlaylist(selectedPlaylist, [problemId])
 
-
-    onclose()
+    onClose();
+    };
 
     if(!isOpen) return null;
-    }
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-md">

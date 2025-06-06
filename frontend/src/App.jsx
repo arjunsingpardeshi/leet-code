@@ -11,7 +11,7 @@ import Layout from "./layout/Layout"
 import AdminRoute from './components/AdminRoute'
 import AddProblem from './page/AddProblem'
 import ProblemPage from './page/ProblemPage'
-
+import ProfilePage from './page/ProfilePage'
 const App = () => {
   
   
@@ -50,8 +50,8 @@ const App = () => {
       path='/signup'
       element={!authUser ? <SignUpPage/> : <Navigate to={"/"}/>}
       />
-
-
+      <Route path="/profile" element={<ProfilePage />} />
+      
       <Route
       path='/problem/:id'
       element={authUser ? <ProblemPage/> : <Navigate to={"/login"}/>}

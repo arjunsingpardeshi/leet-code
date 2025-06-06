@@ -220,7 +220,7 @@ const deleteProblem = async (req, res) => {
 const  getAllProblemsSolvedByUser = async  (req, res) => {
 
     try {
-        const problems = db.Problem.findMany({
+        const problems = await db.Problem.findMany({
             where:{
                 solvedBy:{
                     some:{

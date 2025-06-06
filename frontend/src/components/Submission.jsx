@@ -27,7 +27,7 @@ const SubmissionResults = ({ submission }) => {
           <div className="card-body p-4">
             <h3 className="card-title text-sm">Status</h3>
             <div className={`text-lg font-bold ${
-              submission.status === 'Accepted' ? 'text-success' : 'text-error'
+              submission.status === 'ACCEPTED' ? 'text-success' : 'text-error'
             }`}>
               {submission.status}
             </div>

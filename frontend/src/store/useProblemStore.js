@@ -34,14 +34,16 @@ export const useProblemStore  = create((set) => ({
         }
     },
 
-    getProblemById: async () => {
+    getProblemById: async (id) => {
+
         try {
             set({isProblemLoading: true});
+           // console.log("problem id = ", id)
             const res = await axiosInstance.get(`/problems/get-problem/${id}`);
 
             set({problem: res.data.problem})
             
-            toast.success(res.data.messaeg);
+            toast.success(res.data.message);
         } catch (error) {
             console.log("Error getting  problem by id", error);
             toast.error("Error in geting problemby id")
@@ -54,7 +56,7 @@ export const useProblemStore  = create((set) => ({
     getSolvedProblemByUser: async () => {
 
         try {
-            const res = await axiosInstance.get("/problems/get-solved-problem");
+            const res = await axiosInstance.get("/problems/get-solved-problems");
             
             set({solvedProblems: res.data.problems})
         } catch (error) {

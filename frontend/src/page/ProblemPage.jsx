@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Editor } from '@monaco-editor/react'
+import React, { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
 import {
   Play,
   FileText,
@@ -17,91 +16,92 @@ import {
   ThumbsUp,
   Home,
 } from "lucide-react";
-
-
-
-
-import { useProblemStore } from '../store/useProblemStore';
-import { useExecutionStore } from '../store/useExecutionStore';
-import { getLanguageId } from '../lib/lang';
-import { useSubmissionStore } from '../store/useSubmissionStore';
-import  Submission  from "../components/Submission"
-import SubmissionsList from '../components/SubmissionList';
+import { Link, useParams } from "react-router-dom";
+import { useProblemStore } from "../store/useProblemStore";
+import { getLanguageId } from "../lib/lang";
+import { useExecutionStore } from "../store/useExecutionStore";
+import { useSubmissionStore } from "../store/useSubmissionStore";
+import Submission from "../components/Submission";
+import SubmissionsList from "../components/SubmissionList";
 
 const ProblemPage = () => {
+  const { id } = useParams();
+  const { getProblemById, problem, isProblemLoading } = useProblemStore();
 
-    const {id} = useParams();
+  const {
+    submission: submissions,
+    isLoading: isSubmissionsLoading,
+    getSubmissionForProblem,
+    getSubmissionCountForProblem,
+    submissionCount,
+  } = useSubmissionStore();
 
-    const {getProblemById, problem, isProblemLoading} = useProblemStore()
+  const [code, setCode] = useState("");
+  const [activeTab, setActiveTab] = useState("description");
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [testcases, setTestCases] = useState([]);
 
+  const { executeCode, submission, isExecuting } = useExecutionStore();
 
-    
-    const {submission: submissions, isLoading:isSubmissionsLoading, getSubmissionForProblem,getSubmissionCountForProblem, submissionCount} = useSubmissionStore()
+  useEffect(() => {
+    getProblemById(id);
+    getSubmissionCountForProblem(id);
+  }, [id]);
 
-    const [code, setCode] = useState("")
-    const [activeTab, setActiveTab] = useState("discription");
-    const [selectedLanguage, setSelectedLanguage] = useState("javascript")
-    const [isBookmarked, setIsBookmarked] = useState()
-    const [testCases, setTestCases] = useState([])
-
-    const [executeCode, submission, isExecuting] = useExecutionStore()
-    useEffect(() => {
-        
-      getProblemById(id)
-
-      getSubmissionCountForProblem(id)
-    },[id])
-
-    
-    useEffect(() => {
-        
-        
-        
-        if(problem){
-            setCode(problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || "")
-
-            
-            setTestCases(problem.testcases?.map((tc) => ({
-                input: tc.input,
-                output: tc.output
-            }))) || []
-        }
-    }, [problem, selectedLanguage])
-
-
-
-
-    useEffect(() => {
-
-      if(activeTab === "submission" && id){
-        getSubmissionForProblem(id)
-      }
-    }, [activeTab, id])
-
-    
-    const handleLanguageChange = (e) => {
-        const lang = e.target.value;
-        
-        setSelectedLanguage(lang);
-        setCode(problem.codeSnippets?.[lang] || "");
+  useEffect(() => {
+    if (problem) {
+      setCode(
+        problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || ""
+      );
+      setTestCases(
+        problem.testcases?.map((tc) => ({
+          input: tc.input,
+          output: tc.output,
+        })) || []
+      );
     }
+  }, [problem, selectedLanguage]);
 
-    const handleRunCode = (e) => {
-        e.preventDefault()
-        try {
-            
-            const language_id = getLanguageId(selectedLanguage);
-            const stdin = problem.testcases.map((tc) => tc.input);
-            const expected_outputs = problem.testcases.map((tc) => tc.output);
-            executeCode(code, language_id, stdin, expected_outputs, id);
-
-        } catch (error) {
-            console.log("Error executing code", error);
-            
-        }
+  useEffect(() => {
+    if (activeTab === "submissions" && id) {
+      console.log("inside useeffect of submission")
+      getSubmissionForProblem(id);
     }
+  }, [activeTab, id]);
 
-    const renderTabContent = () => {
+  console.log("submission", submissions);
+
+  const handleLanguageChange = (e) => {
+    const lang = e.target.value;
+    setSelectedLanguage(lang);
+    setCode(problem.codeSnippets?.[lang] || "");
+  };
+
+  const handleRunCode = (e) => {
+    e.preventDefault();
+    try {
+      const language_id = getLanguageId(selectedLanguage);
+      const stdin = problem.testcases.map((tc) => tc.input);
+      const expected_outputs = problem.testcases.map((tc) => tc.output);
+      executeCode(code, language_id, stdin, expected_outputs, id);
+    } catch (error) {
+      console.log("Error executing code", error);
+    }
+  };
+
+  if (isProblemLoading || !problem) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-base-200">
+        <div className="card bg-base-100 p-8 shadow-xl">
+          <span className="loading loading-spinner loading-lg text-primary"></span>
+          <p className="mt-4 text-base-content/70">Loading problem...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const renderTabContent = () => {
     switch (activeTab) {
       case "description":
         return (
@@ -194,8 +194,9 @@ const ProblemPage = () => {
         return null;
     }
   };
+
   return (
-     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       <nav className="navbar bg-base-100 shadow-lg px-4">
         <div className="flex-1 gap-2">
           <Link to={"/"} className="flex items-center gap-2 text-primary">
@@ -378,7 +379,7 @@ const ProblemPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProblemPage
+export default ProblemPage;

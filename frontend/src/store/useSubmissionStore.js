@@ -3,10 +3,6 @@ import toast from "react-hot-toast";
 
 import { axiosInstance } from "../lib/axios";
 
-
-
-
-
 export const useSubmissionStore =  create((set) => ({
 
     isLoading: null,
@@ -19,7 +15,7 @@ export const useSubmissionStore =  create((set) => ({
         try {
             set({isLoading: true})
             const res = await axiosInstance.get("/submission/get-all-submission");
-            set({submissions: res.data.message})
+            set({submissions: res.data.submissions})
             toast.success(res.data.message)
         } catch (error) {
             console.log("Error getting all submission", error)
@@ -32,16 +28,18 @@ export const useSubmissionStore =  create((set) => ({
 
         try {
                 const res = await axiosInstance.get(`/submission/get-submission/${problemId}`)
-
-                set({submission: res.data.submission})
+                console.log("submissions for problem is = ",res.data.submissions)
+                set({submission: res.data.submissions})
         } catch (error) {
-            console.log("Errro getting submission for problem", error)
+            console.log("Error getting submission for problem", error)
             toast.error("Error getting submission for problem")
         }
     },
 
     getSubmissionCountForProblem: async (problemId) => {
         try {
+            console.log("problem id = ", problemId)
+
             const res = await axiosInstance.get(`/submission/get-submission-count/${problemId}`)
 
             set({submissionCount: res.data.count})

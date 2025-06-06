@@ -101,7 +101,7 @@ const addProblemToPlaylist = async (req, res) => {
         })
 
     } catch (error) {
-        console.error("error adding problem in playlist")
+        console.error("error adding problem in playlist ", error)
         res.status(500).json({ error: "error in adding problem in playlist" })
     }
 }

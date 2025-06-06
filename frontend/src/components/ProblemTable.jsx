@@ -11,7 +11,7 @@ import AddToPlaylistModal from "./AddToPlaylist"
 const ProblemTable = ({problems}) => {
 
 
-    const {authUser} = useState()
+    const {authUser} = useAuthStore()
 
     
     const [search, setSearch] = useState("")
@@ -72,6 +72,9 @@ const ProblemTable = ({problems}) => {
     const handleAddToPlaylist = (problemId) => {
       setSelectedProblemId(problemId)
       setIsAddToPlaylistModalOpen(true)
+      console.log("inside problem table ");
+
+      
     }
 
     const handleCreatePlaylist = async (data) => {
