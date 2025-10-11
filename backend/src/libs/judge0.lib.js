@@ -17,6 +17,7 @@ const submitBatch = async (submissions) => {
 }
 
 const pollBatchResults = async (tokens) => {
+    console.log("hello")
     while(true){
         const {data} = await axios.get(`${process.env.JUDGE0_API_URL}/submissions/batch`, {
             params:{
@@ -24,9 +25,12 @@ const pollBatchResults = async (tokens) => {
                 base64_encoded:false
             }
         });
+            console.log("hello in while")
+            console.log("data.submission = ", data.submissions)
+
         const result = data.submissions;
         const isAllDone = result.every((r) => r.status.id ===3);
-        
+        console.log("is all done",isAllDone)
         if(isAllDone) return result;
         await sleep(1000)
     }

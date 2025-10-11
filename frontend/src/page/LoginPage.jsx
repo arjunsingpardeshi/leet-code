@@ -34,7 +34,7 @@ const LoginPage = () => {
         try {
           await login(data)
         } catch (error) {
-          console.error("signup failed ", error)  
+          console.error("login failed ", error)  
         }
         
     }
