@@ -39,12 +39,14 @@ const register = async (req, res) => {
         res.status(201).json({
             success: true,
             message: "User created successfully",
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email,
-            role: newUser.role,
-            image: newUser.image
-        });
+            user: {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role,
+                image: newUser.image
+            }       
+         });
     } catch (error) {
         console.error("error creating user", error);
         res.status(500).json({
@@ -92,11 +94,13 @@ const login = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Logged in successfully",
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            image: user.image
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                image: user.image
+            }
         });
     } catch (error) {
         console.log("error in logged in ", error);

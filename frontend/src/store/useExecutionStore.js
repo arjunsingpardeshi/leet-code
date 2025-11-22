@@ -5,12 +5,7 @@ import toast from "react-hot-toast";
 export const useExecutionStore = create((set) => ({
     isExecuting: false,
     submission: null,
-
-    
-
-    
-    
-    
+        
     executeCode: async(source_code, language_id, stdin, expected_outputs, problemId) => {
 
         try {
