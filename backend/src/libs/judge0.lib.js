@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const RAPID_API_KEY = process.env.RAPID_API_KEY; // put your RapidAPI key in .env
+const RAPID_API_KEY = process.env.RAPID_API_KEY;
 const RAPID_API_HOST = "judge0-ce.p.rapidapi.com";
 const RAPID_API_BASE_URL = `https://${RAPID_API_HOST}`;
 
@@ -32,7 +32,7 @@ try {
     );
 
     console.log("submission result:", data);
-    return data; // ✅ Return [{ token }, { token }, ...]
+    return data; // Return [{ token }, { token }, ...]
   } catch (error) {
     console.error("Batch submission error:", error.response?.data || error.message);
     throw error;
