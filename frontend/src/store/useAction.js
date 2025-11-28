@@ -3,15 +3,6 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 
-
-
-
-
-
-
-
-
-
 export const useAction = create((set) => ({
 
     isDeletingProblem: false,
@@ -21,7 +12,7 @@ export const useAction = create((set) => ({
             
             
             set({isDeletingProblem: true});
-            const res = await axiosInstance.delete(`/problem/delete-problem/${id}`)
+            const res = await axiosInstance.delete(`/problems/delete-problem/${id}`)
             toast.success(res.data.message)
 
         } catch (error) {
