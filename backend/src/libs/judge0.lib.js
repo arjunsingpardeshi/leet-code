@@ -9,7 +9,7 @@ const getJudge0LanguageId = (language) => {
         "PYTHON": 71,
         "JAVA": 62,
         "JAVASCRIPT": 63
-    }
+    }                   
     return languageMap[language.toUpperCase()]
 }
 
